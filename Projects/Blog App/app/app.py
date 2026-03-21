@@ -1,11 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-
-
-class NewPost(BaseModel):
-    id: int
-    title: str
-    content: str
+from app.schemas import NewPost
 
 app = FastAPI()
 
@@ -86,13 +80,6 @@ def get_post(id : int):
 
 @app.post("/create-post")
 def create_post(post: NewPost):
-    # Convert Pydantic model to dict
-    post_dict = post.dict()
-
-    # Add to your storage
-    text_posts_data[post.id] = post_dict
-
-    return {
-        "message": "Post created successfully",
-        "post": post_dict
-    }
+    new_post= {"title": post.title, "content": post.content,}
+    text_posts_data[max(text_posts_data.keys()) + 1] = new_post
+    return new_post
